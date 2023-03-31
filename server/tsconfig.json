@@ -12,7 +12,10 @@
     "baseUrl": "./",
     "incremental": true,
     "paths": {
+      "@/*": ["src/*"],
+      "@polls": ["src/polls/index"],
+      "@polls/*": ["src/polls/*"],
       "@nestjs/common": ["@nestjs/common/"]
-    },
+    }
   }
 }
