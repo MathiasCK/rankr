@@ -15,6 +15,7 @@
       "@/*": ["src/*"],
       "@polls": ["src/polls/index"],
       "@polls/*": ["src/polls/*"],
+      "@utils/*": ["src/utils/*"],
       "@nestjs/common": ["@nestjs/common/"]
     }
   }

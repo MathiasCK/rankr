@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PollsModule, PollsController } from '@polls';
+import { PollsModule } from '@polls';
 
 @Module({
   imports: [ConfigModule.forRoot(), PollsModule],
-  controllers: [PollsController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}
