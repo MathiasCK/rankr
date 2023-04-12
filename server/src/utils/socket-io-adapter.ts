@@ -24,9 +24,7 @@ export class SocketIOAdapter extends IoAdapter {
       ],
     };
 
-    this.logger.log(`Configuring SocketIO server with custom CORS options`, {
-      cors,
-    });
+    this.logger.log('Configuring SocketIO server with custom CORS options');
 
     const optionsWithCORS: ServerOptions = {
       ...options,

@@ -1,5 +1,3 @@
-import { Request } from '@nestjs/common';
-
 // Service types
 export type CreatePollFields = {
   topic: string;
