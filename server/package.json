@@ -80,7 +80,9 @@
       "^@/(.*)$": "<rootDir>/../src/$1",
       "^@polls/(.*)$": "<rootDir>/../src/polls/$1",
       "^@polls(.*)$": "<rootDir>/../src/polls/index",
-      "^@utils/(.*)$": "<rootDir>/../src/utils/$1"
+      "^@utils/(.*)$": "<rootDir>/../src/utils/$1",
+      "^@exceptions/(.*)$": "<rootDir>/../src/exceptions/$1",
+      "^@exceptions(.*)$": "<rootDir>/../src/exceptions/index"
     }
   }
 }

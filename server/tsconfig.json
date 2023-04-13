@@ -16,6 +16,8 @@
       "@polls": ["src/polls/index"],
       "@polls/*": ["src/polls/*"],
       "@utils/*": ["src/utils/*"],
+      "@exceptions": ["src/exceptions/index"],
+      "@exceptions/*": ["src/exceptions/*"],
       "@nestjs/common": ["@nestjs/common/"]
     }
   }
