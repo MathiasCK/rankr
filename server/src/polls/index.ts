@@ -9,6 +9,8 @@ export {
   AddParticipantData,
   RequestWithAuth,
   SocketWithAuth,
+  AddParticipantFields,
+  RemoveParticipantData,
 } from './polls.types';
 export { CreatePollDto, JoinPollDto } from './dtos';
 export { PollsRepository } from './polls.repository';
