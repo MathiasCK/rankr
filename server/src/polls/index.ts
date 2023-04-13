@@ -7,6 +7,8 @@ export {
   RejoinPollFields,
   CreatePollData,
   AddParticipantData,
+  RequestWithAuth,
+  SocketWithAuth,
 } from './polls.types';
 export { CreatePollDto, JoinPollDto } from './dtos';
 export { PollsRepository } from './polls.repository';
