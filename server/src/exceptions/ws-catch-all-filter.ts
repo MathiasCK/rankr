@@ -5,7 +5,11 @@ import {
   ArgumentsHost,
   BadRequestException,
 } from '@nestjs/common';
-import { WsBadRequestException, WsUnknownException } from '@exceptions';
+import {
+  WsBadRequestException,
+  WsTypeException,
+  WsUnknownException,
+} from '@exceptions';
 
 @Catch()
 export class WsCatchAllFilter implements ExceptionFilter {
@@ -19,6 +23,11 @@ export class WsCatchAllFilter implements ExceptionFilter {
         exceptionData['message'] ?? exceptionData ?? exception.name,
       );
       socket.emit('exception', wsException.getError());
+      return;
+    }
+
+    if (exception instanceof WsTypeException) {
+      socket.emit('exception', exception.getError());
       return;
     }
 
