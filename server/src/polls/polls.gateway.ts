@@ -20,6 +20,7 @@ import { Namespace } from 'socket.io';
 import { NominationDto, SocketWithAuth } from '@polls';
 import { WsCatchAllFilter } from '@exceptions';
 import { GatewayAdminGuard } from '@polls/gateway-admin.guard';
+import { Results } from 'shared';
 
 @UsePipes(new ValidationPipe())
 @UseFilters(new WsCatchAllFilter())
@@ -180,5 +181,25 @@ export class PollsGateway
     if (updatedPoll) {
       this.io.to(client.pollID).emit('poll_updated', updatedPoll);
     }
+  }
+
+  @UseGuards(GatewayAdminGuard)
+  @SubscribeMessage('close_poll')
+  async deletePoll(@ConnectedSocket() client: SocketWithAuth): Promise<void> {
+    this.logger.log(`Closing poll: ${client.pollID} and computing results`);
+
+    const updatedPoll = await this.pollsService.computeResults(client.pollID);
+
+    this.io.to(client.pollID).emit('poll_updated', updatedPoll);
+  }
+
+  @UseGuards(GatewayAdminGuard)
+  @SubscribeMessage('cancel_poll')
+  async cancelPoll(@ConnectedSocket() client: SocketWithAuth): Promise<void> {
+    this.logger.log(`Canceling poll: ${client.pollID}`);
+
+    await this.pollsService.computeResults(client.pollID);
+
+    this.io.to(client.pollID).emit('poll_canceled');
   }
 }

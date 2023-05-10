@@ -10,13 +10,21 @@ export type Poll = {
   adminID: string;
   nominations: Nominations;
   rankings: Rankings;
-  // results: Results;
+  results: Results;
   hasStarted: boolean;
 };
 
 export type Rankings = {
   [userID: string]: NominationID[];
 };
+
+export type Result = {
+  nominationID: NominationID;
+  nominationText: string;
+  score: number;
+};
+
+export type Results = Result[];
 
 type NominationID = string;
 
