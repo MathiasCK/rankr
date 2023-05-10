@@ -2,6 +2,11 @@ import { Request } from 'express';
 import { Nomination } from 'shared';
 import { Socket } from 'socket.io';
 
+type poll_user_ID = {
+  pollID: string;
+  userID: string;
+};
+
 // Service types
 export type CreatePollFields = {
   topic: string;
@@ -15,36 +20,30 @@ export type JoinPollFields = {
 };
 
 export type RejoinPollFields = {
-  pollID: string;
-  userID: string;
   name: string;
-};
+} & poll_user_ID;
 
 export type AddParticipantFields = {
-  pollID: string;
-  userID: string;
   name: string;
-};
+} & poll_user_ID;
 
 export type AddNominationFields = {
-  pollID: string;
-  userID: string;
   text: string;
-};
+} & poll_user_ID;
+
+export type SubmitRankingFields = {
+  rankings: string[];
+} & poll_user_ID;
 
 // Repository types
 export type CreatePollData = {
-  pollID: string;
   topic: string;
   votesPerVoter: number;
-  userID: string;
-};
+} & poll_user_ID;
 
 export type AddParticipantData = {
-  pollID: string;
-  userID: string;
   name: string;
-};
+} & poll_user_ID;
 
 export type AddNominationData = {
   pollID: string;
@@ -52,12 +51,14 @@ export type AddNominationData = {
   nomination: Nomination;
 };
 
+export type AddParticipantRankingsData = {
+  rankings: string[];
+} & poll_user_ID;
+
 // Guard types
 export type AuthPayload = {
-  userID: string;
-  pollID: string;
   name: string;
-};
+} & poll_user_ID;
 
 export type RequestWithAuth = Request & AuthPayload;
 

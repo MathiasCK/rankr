@@ -7,7 +7,12 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Redis } from 'ioredis';
-import { AddNominationData, AddParticipantData, CreatePollData } from '@polls';
+import {
+  AddNominationData,
+  AddParticipantData,
+  AddParticipantRankingsData,
+  CreatePollData,
+} from '@polls';
 import { Poll } from 'shared';
 
 @Injectable()
@@ -36,6 +41,7 @@ export class PollsRepository {
       adminID: userID,
       hasStarted: false,
       nominations: {},
+      rankings: {},
     };
 
     this.logger.log(
@@ -174,6 +180,57 @@ export class PollsRepository {
       const msg = `Failed to remove nominationID: ${nominationID} from pollID: ${pollID}`;
 
       this.logger.error(msg);
+      throw new InternalServerErrorException(msg);
+    }
+  }
+
+  async startPoll(pollID: string): Promise<Poll> {
+    this.logger.log(`Setting hasStarted for poll: ${pollID}`);
+
+    const key = `polls:${pollID}`;
+
+    try {
+      await this.redisClient.send_command(
+        'JSON.SET',
+        key,
+        '.hasStarted',
+        JSON.stringify(true),
+      );
+
+      return this.getPoll(pollID);
+    } catch (e) {
+      const msg = `Failed to set hasStarted for poll: ${pollID}`;
+
+      this.logger.error(msg);
+      throw new InternalServerErrorException(msg);
+    }
+  }
+
+  async addParticipantRankings({
+    pollID,
+    userID,
+    rankings,
+  }: AddParticipantRankingsData): Promise<Poll> {
+    this.logger.log(
+      `Attempting to add rankings for userID/name: ${userID} to pollID: ${pollID}`,
+      rankings,
+    );
+
+    const key = `polls:${pollID}`;
+    const rankingsPath = `.rankings.${userID}`;
+    try {
+      await this.redisClient.send_command(
+        'JSON.SET',
+        key,
+        rankingsPath,
+        JSON.stringify(rankings),
+      );
+
+      return this.getPoll(pollID);
+    } catch (e) {
+      const msg = `Failed to add rankings for userID/name: ${userID} to pollID: ${pollID}`;
+
+      this.logger.error(msg, rankings);
       throw new InternalServerErrorException(msg);
     }
   }

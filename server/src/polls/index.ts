@@ -13,6 +13,8 @@ export {
   AuthPayload,
   AddNominationData,
   AddNominationFields,
+  AddParticipantRankingsData,
+  SubmitRankingFields,
 } from './polls.types';
 export { CreatePollDto, JoinPollDto, NominationDto } from './dtos';
 export { PollsRepository } from './polls.repository';
