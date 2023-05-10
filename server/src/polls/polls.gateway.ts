@@ -17,7 +17,7 @@ import {
 } from '@nestjs/websockets';
 import { PollsService } from '@polls/polls.service';
 import { Namespace } from 'socket.io';
-import { SocketWithAuth } from '@polls';
+import { NominationDto, SocketWithAuth } from '@polls';
 import { WsCatchAllFilter } from '@exceptions';
 import { GatewayAdminGuard } from '@polls/gateway-admin.guard';
 
@@ -103,6 +103,46 @@ export class PollsGateway
     const updatedPoll = await this.pollsService.removeParticipant(
       client.pollID,
       id,
+    );
+
+    if (updatedPoll) {
+      this.io.to(client.pollID).emit('poll_updated', updatedPoll);
+    }
+  }
+
+  @SubscribeMessage('nominate')
+  async nominate(
+    @MessageBody() nomination: NominationDto,
+    @ConnectedSocket() client: SocketWithAuth,
+  ): Promise<void> {
+    this.logger.debug(
+      `Attempting to add nomination for user ${client.userID} to poll ${client.pollID}\n${nomination.text}`,
+    );
+
+    const updatedPoll = await this.pollsService.addNomination({
+      pollID: client.pollID,
+      userID: client.userID,
+      text: nomination.text,
+    });
+
+    if (updatedPoll) {
+      this.io.to(client.pollID).emit('poll_updated', updatedPoll);
+    }
+  }
+
+  @UseGuards(GatewayAdminGuard)
+  @SubscribeMessage('remove_nomination')
+  async removeNomination(
+    @MessageBody('id') nominationID: string,
+    @ConnectedSocket() client: SocketWithAuth,
+  ): Promise<void> {
+    this.logger.debug(
+      `Attempting to remove nomination: ${nominationID} from poll: ${client.pollID}`,
+    );
+
+    const updatedPoll = await this.pollsService.removeNomination(
+      client.pollID,
+      nominationID,
     );
 
     if (updatedPoll) {

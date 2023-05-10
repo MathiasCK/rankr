@@ -10,9 +10,10 @@ export {
   RequestWithAuth,
   SocketWithAuth,
   AddParticipantFields,
-  RemoveParticipantData,
   AuthPayload,
+  AddNominationData,
+  AddNominationFields,
 } from './polls.types';
-export { CreatePollDto, JoinPollDto } from './dtos';
+export { CreatePollDto, JoinPollDto, NominationDto } from './dtos';
 export { PollsRepository } from './polls.repository';
 export { PollsGateway } from './polls.gateway';
