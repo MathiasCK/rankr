@@ -17,5 +17,12 @@
     "jsx": "react",
     "types": ["@types/jest"]
   },
-  "include": ["./src", "./jest-setup.ts"]
+  "include": ["./src", "./jest-setup.ts"],
+  "paths": {
+    "@stories": ["src/stories"],
+    "@components": ["src/components/index"],
+    "@components/*": ["src/components/*"],
+    "@pages": ["src/pages/index"],
+    "@pages/*": ["src/pages/*"]
+  }
 }
