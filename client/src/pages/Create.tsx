@@ -6,6 +6,17 @@ const Create: React.FC = () => {
   const [maxVotes, setMaxVotes] = useState(3);
   const [name, setName] = useState('');
 
+  const validateFields = (): boolean => {
+    return (
+      pollTopic.length > 0 &&
+      pollTopic.length <= 100 &&
+      maxVotes > 1 &&
+      maxVotes <= 5 &&
+      name.length > 1 &&
+      name.length <= 25
+    );
+  };
+
   return (
     <article className="flex flex-col w-full justify-around items-stretch h-full mx-auto max-w-sum">
       <div className="mb-12">
@@ -42,7 +53,7 @@ const Create: React.FC = () => {
         <button
           className="box btn-orange w-32 my-2"
           onClick={() => console.log('createPoll')}
-          disabled={false}
+          disabled={!validateFields()}
         >
           Create
         </button>
