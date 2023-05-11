@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CountSelector from '@components/ui/CountSelector';
+import { actions } from '../state';
 
 const Create: React.FC = () => {
   const [pollTopic, setPollTopic] = useState('');
@@ -59,7 +60,7 @@ const Create: React.FC = () => {
         </button>
         <button
           className="box btn-purple w-32 my-2"
-          onClick={() => console.log('starting over')}
+          onClick={() => actions.startOver()}
           disabled={false}
         >
           Start Over

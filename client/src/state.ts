@@ -18,6 +18,9 @@ const actions = {
   setPage: (page: AppPage): void => {
     state.currentPage = page;
   },
+  startOver: (): void => {
+    state.currentPage = AppPage.Welcome;
+  },
 };
 
 export { state, actions };
