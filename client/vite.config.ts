@@ -8,10 +8,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@stories': path.resolve(__dirname, './src/stories'),
-      '@components': path.resolve(__dirname, './src/components/index'),
-      '@components/*': path.resolve(__dirname, './src/components/*'),
+      '@components': path.resolve(__dirname, './src/components'),
       '@pages': path.resolve(__dirname, './src/pages/index'),
-      '@pages/*': path.resolve(__dirname, './src/pages/*'),
     },
   },
   plugins: [react()],
