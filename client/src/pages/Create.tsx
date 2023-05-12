@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import CountSelector from '@components/ui/CountSelector';
-import { actions } from '../state';
+import { AppPage, actions } from '../state';
+import { makeRequest } from '../api';
+import { Poll } from 'shared';
 
 const Create: React.FC = () => {
   const [pollTopic, setPollTopic] = useState('');
   const [maxVotes, setMaxVotes] = useState(3);
   const [name, setName] = useState('');
+  const [apiError, setApiError] = useState('');
 
   const validateFields = (): boolean => {
     return (
@@ -13,9 +16,41 @@ const Create: React.FC = () => {
       pollTopic.length <= 100 &&
       maxVotes > 1 &&
       maxVotes <= 5 &&
-      name.length > 1 &&
+      name.length > 0 &&
       name.length <= 25
     );
+  };
+
+  const handleCreatePoll = async () => {
+    actions.startLoading();
+    setApiError('');
+
+    const { data, error } = await makeRequest<{
+      poll: Poll;
+      accesToken: string;
+    }>('/api/polls', {
+      method: 'POST',
+      body: JSON.stringify({
+        topic: pollTopic,
+        votesPerVoter: maxVotes,
+        name,
+      }),
+    });
+
+    console.log(data, error);
+
+    if (error && error.statusCode == 400) {
+      console.log('400 error', error);
+      setApiError('name and poll topic are both required');
+    } else if (error && error.statusCode != 400) {
+      setApiError(error.messages[0]);
+    } else {
+      actions.initializePoll(data.poll);
+      actions.setAccessToken(data.accesToken);
+      actions.setPage(AppPage.WaitingRoom);
+    }
+
+    actions.stopLoading();
   };
 
   return (
@@ -49,11 +84,14 @@ const Create: React.FC = () => {
             />
           </div>
         </section>
+        {apiError && (
+          <p className="text-center text-red-600 font-light mt-8">{apiError}</p>
+        )}
       </div>
       <div className="flex flex-col justify-center items-cemter">
         <button
           className="box btn-orange w-32 my-2"
-          onClick={() => console.log('createPoll')}
+          onClick={handleCreatePoll}
           disabled={!validateFields()}
         >
           Create

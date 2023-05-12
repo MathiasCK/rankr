@@ -1,5 +1,5 @@
 import React from 'react';
-import { Welcome, Create, Join } from '@pages';
+import { Welcome, Create, Join, WaitingRoom } from '@pages';
 import { AppPage, state } from './state';
 import { CSSTransition } from 'react-transition-group';
 import { useSnapshot } from 'valtio';
@@ -8,6 +8,7 @@ const routeConfig = {
   [AppPage.Welcome]: Welcome,
   [AppPage.Create]: Create,
   [AppPage.Join]: Join,
+  [AppPage.WaitingRoom]: WaitingRoom,
 };
 
 const Pages: React.FC = () => {
