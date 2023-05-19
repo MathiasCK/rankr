@@ -18,7 +18,7 @@ const Join: React.FC = () => {
 
     const { data, error } = await makeRequest<{
       poll: Poll;
-      accesToken: string;
+      accessToken: string;
     }>('/api/polls/join', {
       method: 'POST',
       body: JSON.stringify({
@@ -35,7 +35,7 @@ const Join: React.FC = () => {
       setApiError('Unknown API error');
     } else {
       actions.initializePoll(data.poll);
-      actions.setAccessToken(data.accesToken);
+      actions.setAccessToken(data.accessToken);
       actions.setPage(AppPage.WaitingRoom);
     }
 
