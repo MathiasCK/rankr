@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { actions } from '../state';
+import { AppPage, actions } from '../state';
+import { makeRequest } from '../api';
+import { Poll } from 'shared';
 
 const Join: React.FC = () => {
   const [name, setName] = useState('');
@@ -10,7 +12,35 @@ const Join: React.FC = () => {
     return pollID.length === 6 && name.length > 0 && name.length <= 25;
   };
 
-  const handleJoinPoll = () => console.log('Join');
+  const handleJoinPoll = async () => {
+    actions.startLoading();
+    setApiError('');
+
+    const { data, error } = await makeRequest<{
+      poll: Poll;
+      accesToken: string;
+    }>('/api/polls/join', {
+      method: 'POST',
+      body: JSON.stringify({
+        pollID,
+        name,
+      }),
+    });
+
+    console.log(data, error);
+
+    if (error && error.statusCode == 400) {
+      setApiError('Please make sure to include a poll topic');
+    } else if (error && !error.statusCode) {
+      setApiError('Unknown API error');
+    } else {
+      actions.initializePoll(data.poll);
+      actions.setAccessToken(data.accesToken);
+      actions.setPage(AppPage.WaitingRoom);
+    }
+
+    actions.stopLoading();
+  };
 
   return (
     <section className="flex flex-col w-full justify-around items-stretch h-full mx-auto max-w-sum">
