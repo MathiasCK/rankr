@@ -15,8 +15,8 @@ const Pages: React.FC = () => {
   const snap = useSnapshot(state);
 
   useEffect(() => {
-    // If token is loaded and poll has not started
-    if (snap.me?.id && !snap.poll?.hasStarted) {
+    // If token is loaded and a poll exists and poll has not started
+    if (snap.me?.id && snap.poll && !snap.poll?.hasStarted) {
       actions.setPage(AppPage.WaitingRoom);
     }
   }, [snap.me?.id, snap.poll?.hasStarted]);
