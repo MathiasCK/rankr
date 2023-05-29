@@ -73,7 +73,17 @@ const actions = {
   setPage: (page: AppPage): void => {
     state.currentPage = page;
   },
+  reset: (): void => {
+    state.socket?.disconnect();
+    state.poll = undefined;
+    state.accessToken = undefined;
+    state.isLoading = false;
+    state.socket = undefined;
+    state.wsErrors = [];
+  },
   startOver: (): void => {
+    actions.reset();
+    localStorage.removeItem('accessToken');
     state.currentPage = AppPage.Welcome;
   },
   startLoading: (): void => {
@@ -104,8 +114,20 @@ const actions = {
       state.socket.connect();
     }
   },
+  nominate: (text: string): void => {
+    state.socket?.emit('nominate', { text });
+  },
+  removeNomination: (id: string): void => {
+    state.socket?.emit('remove_nomination', { id });
+  },
+  removeParticipant: (id: string): void => {
+    state.socket?.emit('remove_participant', { id });
+  },
   addWsError: (error: WSError): void => {
     state.wsErrors = [...state.wsErrors, { ...error, id: nanoid(6) }];
+  },
+  startPoll: (): void => {
+    state.socket?.emit('start_poll');
   },
   removeWsError: (id: string): void => {
     state.wsErrors = state.wsErrors.filter((error) => error.id !== id);
