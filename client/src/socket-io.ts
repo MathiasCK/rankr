@@ -31,5 +31,10 @@ export const createSocketWithHandlers = ({
     );
   });
 
+  socket.on('poll_updated', (poll) => {
+    console.log('event: "poll_updated" received', poll);
+    actions.updatePoll(poll);
+  });
+
   return socket;
 };

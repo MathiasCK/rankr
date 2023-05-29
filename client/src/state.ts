@@ -75,6 +75,9 @@ const actions = {
   initializePoll: (poll?: Poll): void => {
     state.poll = poll;
   },
+  updatePoll: (poll?: Poll): void => {
+    state.poll = poll;
+  },
   setAccessToken: (token?: string): void => {
     state.accessToken = token;
   },
