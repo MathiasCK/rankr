@@ -38,8 +38,17 @@ export const createSocketWithHandlers = ({
   });
 
   socket.on('connect_error', () => {
-    console.log('Failed to connect socket');
+    actions.addWsError({
+      type: 'Connection Error',
+      message: 'Failed to connect to the poll',
+    });
+
     actions.stopLoading();
+  });
+
+  socket.on('exception', (error) => {
+    console.log('WS exception:', error);
+    actions.addWsError(error);
   });
 
   return socket;
