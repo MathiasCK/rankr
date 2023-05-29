@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import styles from './SnackBar.module.css';
 
 type SnackBarProps = {
-  type?: 'standard' | 'error';
+  type?: 'standard' | 'error' | 'message';
   title?: string;
   message: string;
   show: boolean;
@@ -17,6 +17,7 @@ type SnackBarProps = {
 const snackBarStyles = {
   standard: 'bg-gray-100 bg-opacity-50',
   error: 'bg-red-600 text-white',
+  message: 'bg-blue-600 text-white',
 };
 
 const SnackBar: React.FC<SnackBarProps> = ({
