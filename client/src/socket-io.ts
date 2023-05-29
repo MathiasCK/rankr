@@ -37,5 +37,10 @@ export const createSocketWithHandlers = ({
     actions.updatePoll(poll);
   });
 
+  socket.on('connect_error', () => {
+    console.log('Failed to connect socket');
+    actions.stopLoading();
+  });
+
   return socket;
 };
