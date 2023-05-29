@@ -1,6 +1,6 @@
 import { Poll } from 'shared';
 import { proxy, ref } from 'valtio';
-import { derive, subscribeKey } from 'valtio/utils';
+import { subscribeKey } from 'valtio/utils';
 import { getTokenPayload } from './util';
 import { socketIOUrl, createSocketWithHandlers } from './socket-io';
 import { Socket } from 'socket.io-client';
@@ -30,44 +30,35 @@ export type AppState = {
   isLoading: boolean;
   poll?: Poll;
   accessToken?: string;
-  me?: Me;
   socket?: Socket;
   wsErrors: WSErrorUnique[];
+  me?: Me;
+  isAdmin: boolean;
 };
 
-const state: AppState = proxy({
+const state = proxy<AppState>({
   currentPage: AppPage.Welcome,
   isLoading: false,
   wsErrors: [],
-});
+  get me() {
+    const accessToken = this.accessToken;
 
-const stateWithComputed: AppState = derive(
-  {
-    me: (get) => {
-      const accessToken = get(state).accessToken;
+    if (!accessToken) {
+      return;
+    }
 
-      if (!accessToken) {
-        return;
-      }
+    const token = getTokenPayload(accessToken);
 
-      const token = getTokenPayload(accessToken);
-
-      return {
-        id: token.sub,
-        name: token.name,
-      };
-    },
-    isAdmin: (get) => {
-      if (!get(state).me) {
-        return false;
-      }
-      return get(state).me?.id === get(state).poll?.adminID;
-    },
+    return { id: token.sub, name: token.name };
   },
-  {
-    proxy: state,
-  }
-);
+  get isAdmin() {
+    if (!this.me) {
+      return false;
+    }
+
+    return this.me?.id === this.poll?.adminID;
+  },
+});
 
 const actions = {
   setPage: (page: AppPage): void => {
@@ -142,4 +133,4 @@ subscribeKey(state, 'accessToken', () => {
 
 export type AppActions = typeof actions;
 
-export { stateWithComputed as state, actions };
+export { state, actions };
