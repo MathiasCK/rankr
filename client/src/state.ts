@@ -4,6 +4,7 @@ import { derive, subscribeKey } from 'valtio/utils';
 import { getTokenPayload } from './util';
 import { socketIOUrl, createSocketWithHandlers } from './socket-io';
 import { Socket } from 'socket.io-client';
+import { nanoid } from 'nanoid';
 
 export enum AppPage {
   Welcome = 'welcome',
@@ -17,6 +18,13 @@ type Me = {
   name: string;
 };
 
+type WSError = {
+  type: string;
+  message: string;
+};
+
+type WSErrorUnique = WSError & { id: string };
+
 export type AppState = {
   currentPage: AppPage;
   isLoading: boolean;
@@ -24,11 +32,13 @@ export type AppState = {
   accessToken?: string;
   me?: Me;
   socket?: Socket;
+  wsErrors: WSErrorUnique[];
 };
 
 const state: AppState = proxy({
   currentPage: AppPage.Welcome,
   isLoading: false,
+  wsErrors: [],
 });
 
 const stateWithComputed: AppState = derive(
@@ -93,6 +103,12 @@ const actions = {
     } else {
       state.socket.connect();
     }
+  },
+  addWsError: (error: WSError): void => {
+    state.wsErrors = [...state.wsErrors, { ...error, id: nanoid(6) }];
+  },
+  removeWsError: (id: string): void => {
+    state.wsErrors = state.wsErrors.filter((error) => error.id !== id);
   },
 };
 
