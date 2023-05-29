@@ -4,6 +4,7 @@ import { devtools } from 'valtio/utils';
 import './index.css';
 import Pages from './Pages';
 import Loader from '@components/ui/Loader';
+import SnackBar from '@components/ui/SnackBar';
 import { actions, state } from './state';
 import { useSnapshot } from 'valtio';
 import { getTokenPayload } from './util';
@@ -47,6 +48,17 @@ const App: React.FC = () => {
   return (
     <>
       <Loader isLoading={snap.isLoading} color="orange" width={120} />
+      {snap.wsErrors.map((error) => (
+        <SnackBar
+          key={error.id}
+          type="error"
+          title={error.type}
+          message={error.message}
+          show={true}
+          onClose={() => actions.removeWsError(error.id)}
+          autoCloseDuration={5000}
+        />
+      ))}
       <Pages />
     </>
   );
