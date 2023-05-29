@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Welcome, Create, Join, WaitingRoom } from '@pages';
-import { AppPage, state } from './state';
+import { AppPage, actions, state } from './state';
 import { CSSTransition } from 'react-transition-group';
 import { useSnapshot } from 'valtio';
 
@@ -13,6 +13,13 @@ const routeConfig = {
 
 const Pages: React.FC = () => {
   const snap = useSnapshot(state);
+
+  useEffect(() => {
+    // If token is loaded and poll has not started
+    if (snap.me?.id && !snap.poll?.hasStarted) {
+      actions.setPage(AppPage.WaitingRoom);
+    }
+  }, [snap.me?.id, snap.poll?.hasStarted]);
   return (
     <>
       {Object.entries(routeConfig).map(([page, Component]) => (
