@@ -34,6 +34,9 @@ export type AppState = {
   wsErrors: WSErrorUnique[];
   me?: Me;
   isAdmin: boolean;
+  nominationCount: number;
+  participantCount: number;
+  canStartVote: boolean;
 };
 
 const state = proxy<AppState>({
@@ -57,6 +60,16 @@ const state = proxy<AppState>({
     }
 
     return this.me?.id === this.poll?.adminID;
+  },
+  get canStartVote() {
+    const votesPerVoter = this.poll?.votesPerVoter ?? 100;
+    return this.nominationCount >= votesPerVoter;
+  },
+  get participantCount() {
+    return Object.keys(this.poll?.participants || {}).length;
+  },
+  get nominationCount() {
+    return Object.keys(this.poll?.nominations || {}).length;
   },
 });
 
