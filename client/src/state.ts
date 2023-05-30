@@ -141,6 +141,9 @@ const actions = {
   removeWsError: (id: string): void => {
     state.wsErrors = state.wsErrors.filter((error) => error.id !== id);
   },
+  startVote: (): void => {
+    state.socket?.emit('start_poll');
+  },
 };
 
 subscribeKey(state, 'accessToken', () => {

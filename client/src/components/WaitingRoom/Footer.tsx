@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
           <button
             className="box btn-orange my-2"
             disabled={!snap.canStartVote}
-            onClick={() => console.log('will add start vote next time')}
+            onClick={() => actions.startVote()}
           >
             Start Voting
           </button>
