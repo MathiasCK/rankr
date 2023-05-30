@@ -45,6 +45,14 @@ const App: React.FC = () => {
     actions.initializeSocket();
   }, []);
 
+  useEffect(() => {
+    const myID = snap.me?.id;
+
+    // If user is connected but not in the participants (kicked from poll)
+    if (myID && snap.socket?.connected && !snap.poll?.participants[myID]) {
+      actions.startOver();
+    }
+  }, [snap.poll?.participants]);
   return (
     <>
       <Loader isLoading={snap.isLoading} color="orange" width={120} />
