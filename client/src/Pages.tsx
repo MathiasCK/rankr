@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Welcome, Create, Join, WaitingRoom, Voting } from '@pages';
+import { Welcome, Create, Join, WaitingRoom, Voting, Results } from '@pages';
 import { AppPage, actions, state } from './state';
 import { CSSTransition } from 'react-transition-group';
 import { useSnapshot } from 'valtio';
@@ -10,12 +10,14 @@ const routeConfig = {
   [AppPage.Join]: Join,
   [AppPage.WaitingRoom]: WaitingRoom,
   [AppPage.Voting]: Voting,
+  [AppPage.Results]: Results,
 };
 
 const Pages: React.FC = () => {
   const snap = useSnapshot(state);
 
   useEffect(() => {
+    console.log(snap.hasVoted);
     // If token is loaded and a poll exists and poll has not started
     if (snap.me?.id && snap.poll && !snap.poll?.hasStarted) {
       actions.setPage(AppPage.WaitingRoom);
@@ -24,7 +26,11 @@ const Pages: React.FC = () => {
     if (snap.me?.id && snap.poll?.hasStarted) {
       actions.setPage(AppPage.Voting);
     }
-  }, [snap.me?.id, snap.poll?.hasStarted]);
+
+    if (snap.me?.id && snap.hasVoted) {
+      actions.setPage(AppPage.Results);
+    }
+  }, [snap.me?.id, snap.poll?.hasStarted, snap.hasVoted]);
   return (
     <>
       {Object.entries(routeConfig).map(([page, Component]) => (
