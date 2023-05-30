@@ -11,6 +11,7 @@ export enum AppPage {
   Create = 'create',
   Join = 'join',
   WaitingRoom = 'waitingRoom',
+  Voting = 'voting',
 }
 
 type Me = {
