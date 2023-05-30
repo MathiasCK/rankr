@@ -9,7 +9,7 @@ import { actions, state } from './state';
 import { useSnapshot } from 'valtio';
 import { getTokenPayload } from './util';
 
-devtools(state, 'App state');
+devtools(state, { name: 'app state' });
 const App: React.FC = () => {
   const snap = useSnapshot(state);
 
