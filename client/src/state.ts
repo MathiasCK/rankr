@@ -114,9 +114,13 @@ const actions = {
           actions,
         })
       );
-    } else {
-      state.socket.connect();
+      return;
     }
+    if (!state.socket.connected) {
+      state.socket.connect();
+      return;
+    }
+    actions.stopLoading();
   },
   nominate: (text: string): void => {
     state.socket?.emit('nominate', { text });
