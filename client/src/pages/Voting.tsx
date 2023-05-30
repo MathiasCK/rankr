@@ -47,19 +47,19 @@ const Voting = () => {
             </div>
           </>
         )}
+        <article className="px-2">
+          {Object.entries(snap.poll?.nominations || {}).map(
+            ([id, nomination]) => (
+              <RankedCheckBox
+                key={id}
+                value={nomination.text}
+                rank={getRank(id)}
+                onSelect={() => toggleNomination(id)}
+              />
+            )
+          )}
+        </article>
       </header>
-      <article className="px-2">
-        {Object.entries(snap.poll?.nominations || {}).map(
-          ([id, nomination]) => (
-            <RankedCheckBox
-              key={id}
-              value={nomination.text}
-              rank={getRank(id)}
-              onSelect={() => toggleNomination(id)}
-            />
-          )
-        )}
-      </article>
       <div className="mx-auto flex flex-col items-center">
         <button
           className="box btn-purple my-2 w-36"
