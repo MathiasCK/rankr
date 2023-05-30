@@ -163,7 +163,7 @@ export class PollsGateway
     }
   }
 
-  @SubscribeMessage('submit_ranking')
+  @SubscribeMessage('submit_rankings')
   async submitRankings(
     @MessageBody('rankings') rankings: string[],
     @ConnectedSocket() client: SocketWithAuth,
